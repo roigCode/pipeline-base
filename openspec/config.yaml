@@ -1,5 +1,5 @@
 schema: spec-driven
- 
+
 context: |
   Write all artifacts in English.
   This repository validates a spec-driven development pipeline. Treat it as a production system.
@@ -8,7 +8,7 @@ context: |
   Each change starts from a request file in requests/<id>-<slug>.md.
   Every requirement must trace back to that request. Do not add behavior the request does not ask for.
   If the request is ambiguous or incomplete, list open questions instead of resolving them by assumption.
- 
+
 rules:
   proposal:
     - Reference the source request file by path.
@@ -20,7 +20,7 @@ rules:
     - Cover validation and failure scenarios, not only the happy path.
     - Describe observable behavior (inputs, outputs, HTTP status codes), not implementation.
     - For each capability, also write src/test/resources/features/<capability>/<capability>.feature
-      with one Gherkin scenario per spec scenario, using the same scenario title.
+      tagged @pending, with one Gherkin scenario per spec scenario, using the same scenario title.
   design:
     - Name the ports, adapters and classes to create, following the hexagonal structure in AGENTS.md.
     - Define the HTTP contract - method, path, request body, response body, status codes and ProblemDetail errors.
@@ -28,5 +28,6 @@ rules:
     - List any new dependency with its justification. Prefer none.
   tasks:
     - Feature files already exist; tasks implement their step definitions and the code that makes them pass.
+    - The last task removes the @pending tag from the feature files. No other change to feature files is allowed.
     - Each task is small enough for one commit and leaves ./mvnw verify passing.
     - Each task names the test written before the production code.

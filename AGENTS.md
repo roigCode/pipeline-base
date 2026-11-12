@@ -99,8 +99,11 @@ Write the test before the production code for each task.
 - Feature files live in `src/test/resources/features/<capability>/`.
 - Each scenario in a feature file mirrors one scenario of the specs, with the
   same title.
-- During implementation, do not modify `.feature` files. Write or update step
-  definitions only. If a feature file looks wrong, stop and ask.
+- New feature files are tagged `@pending`, which excludes them from the test run
+  until the change is implemented.
+- During implementation, the only allowed change to `.feature` files is removing
+  the `@pending` tag in the last task. Write or update step definitions only.
+  If a feature file looks wrong, stop and ask.
 
 ## Git
 
