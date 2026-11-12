@@ -90,6 +90,8 @@ Write the test before the production code for each task.
 - Every domain rule that constrains input values (lengths, ranges, formats,
   invariants) has at least one jqwik property test in addition to example-based tests.
 - Every test asserts observable behavior. A test without assertions is not a test.
+- Tests are independent: each test creates the data it needs and never relies on
+  data from other tests or on execution order.
 - Unit test method names describe behavior: `shouldXxxWhenYyy`.
 
 ### Acceptance tests (Cucumber)
