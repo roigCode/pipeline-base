@@ -1,3 +1,13 @@
 spring:
   application:
     name: app
+  datasource:
+    hikari:
+      pool-name: app-pool
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      max-lifetime: 1800000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
