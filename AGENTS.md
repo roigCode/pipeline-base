@@ -105,5 +105,8 @@ Write the test before the production code for each task.
   of the active change requires it.
 - Do not change the Java or Spring Boot versions.
 - Do not modify `AGENTS.md` or `openspec/config.yaml`.
+- Do not modify the test infrastructure: `TestcontainersConfiguration`,
+  `architecture/HexagonalArchitectureTest`, `acceptance/CucumberAcceptanceTest`
+  and `acceptance/CucumberSpringConfiguration`.
 - Never commit secrets or credentials. `.env` is local only; document new
   variables in `.env.example` with placeholder values.
