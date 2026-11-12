@@ -1,6 +1,8 @@
 spring:
   application:
     name: app
+  jackson:
+    time-zone: UTC
   datasource:
     hikari:
       pool-name: app-pool
@@ -11,3 +13,13 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  mvc:
+    problemdetails:
+      enabled: true
+  threads:
+    virtual:
+      enabled: true

@@ -25,6 +25,7 @@ rules:
     - Name the ports, adapters and classes to create, following the hexagonal structure in AGENTS.md.
     - Define the HTTP contract - method, path, request body, response body, status codes and ProblemDetail errors.
     - Define the Flyway migrations needed, with tables, columns, types and constraints.
+      Points in time use timestamptz.
     - List any new dependency with its justification. Prefer none.
   tasks:
     - Feature files already exist; tasks implement their step definitions and the code that makes them pass.

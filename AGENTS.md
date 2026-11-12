@@ -13,6 +13,7 @@ system behavior; the code must conform to them.
 - Java 25
 - Spring Boot 4.1 (Spring Framework 7). Do not use Spring Boot 3 APIs or idioms.
 - PostgreSQL with Spring Data JPA. Schema changes only through Flyway migrations.
+- Virtual threads are enabled (`spring.threads.virtual.enabled`).
 - Maven, always through the wrapper (`./mvnw`), never a global `mvn`.
 - Docker must be running: integration and acceptance tests use Testcontainers.
 
@@ -70,6 +71,10 @@ com.roigcode.app.<feature>/
 - Return errors as `ProblemDetail` (RFC 9457) from a single
   `@RestControllerAdvice`.
 - No Lombok.
+- Time: the system runs in UTC. Never call `Instant.now()`, `LocalDateTime.now()`
+  or any other `now()` directly; inject `java.time.Clock` and use it. Use `Instant`
+  or `OffsetDateTime` for points in time, and `timestamptz` columns in PostgreSQL.
+- Compiler warnings fail the build. Fix the cause; do not suppress warnings.
 
 ## Testing
 
@@ -94,6 +99,13 @@ Write the test before the production code for each task.
 - Every test asserts observable behavior. A test without assertions is not a test.
 - Tests are independent: each test creates the data it needs and never relies on
   data from other tests or on execution order.
+- Test data:
+  - Values relevant to the behavior under test (boundaries, invalid inputs,
+    expected results) are explicit literals in the test.
+  - Values irrelevant to the behavior under test come from Datafaker, always through
+    `TestFaker.create()`, which uses a fixed seed. Never use `new Faker()` directly.
+  - Never use Datafaker in feature files or in jqwik properties; jqwik generates
+    its own values.
 - Unit test method names describe behavior: `shouldXxxWhenYyy`.
 
 ### Acceptance tests (Cucumber)
@@ -123,6 +135,7 @@ Write the test before the production code for each task.
   Never edit `spotbugs-exclude.xml`. Fix the code instead.
 - Do not modify `AGENTS.md` or `openspec/config.yaml`.
 - Do not modify the test infrastructure: `TestcontainersConfiguration`,
+  `testsupport/TestFaker`,
   `architecture/HexagonalArchitectureTest`, `acceptance/CucumberAcceptanceTest`
   and `acceptance/CucumberSpringConfiguration`.
 - Never commit secrets or credentials. `.env` is local only; document new

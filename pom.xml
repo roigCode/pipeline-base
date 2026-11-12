@@ -29,6 +29,9 @@
 
 	<properties>
 		<java.version>25</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.outputTimestamp>2026-11-12T00:00:00Z</project.build.outputTimestamp>
 		<cucumber.version>8.0.4</cucumber.version>
 		<archunit.version>1.5.1</archunit.version>
 		<jacoco.version>0.8.15</jacoco.version>
@@ -37,6 +40,7 @@
 		<jqwik.version>1.10.1</jqwik.version>
 		<spotless.version>3.3.0</spotless.version>
 		<spotbugs-maven-plugin.version>4.9.8.5</spotbugs-maven-plugin.version>
+		<datafaker.version>2.7.0</datafaker.version>
 		<argLine></argLine>
 	</properties>
 
@@ -150,6 +154,12 @@
 			<version>${jqwik.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.datafaker</groupId>
+			<artifactId>datafaker</artifactId>
+			<version>${datafaker.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -248,7 +258,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar} -Duser.timezone=UTC -Duser.language=en -Duser.country=US</argLine>
 				</configuration>
 			</plugin>
 			<!-- Formatting: palantir-java-format. "check" runs in verify;
@@ -317,8 +327,18 @@
 			<!-- SBOM (CycloneDX). Version and configuration managed by the Spring Boot parent.
      			Generated at package time into META-INF/sbom/application.cdx.json -->
 			<plugin>
-			<groupId>org.cyclonedx</groupId>
-			<artifactId>cyclonedx-maven-plugin</artifactId>
+				<groupId>org.cyclonedx</groupId>
+				<artifactId>cyclonedx-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<compilerArgs>
+					<arg>-Xlint:all,-processing</arg>
+					<arg>-Werror</arg>
+					</compilerArgs>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
