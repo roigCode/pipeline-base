@@ -24,7 +24,9 @@ system behavior; the code must conform to them.
 - Start the local database: `docker compose up -d`
 - Run the application locally: `./mvnw spring-boot:run -Dspring-boot.run.profiles=local`
 
-A task is not done until `./mvnw verify` passes.
+A task is not done until `./mvnw verify` passes. `verify` enforces:
+- 80% line and branch coverage per class (JaCoCo). Report: `target/site/jacoco/index.html`.
+- 80% mutation score on `domain` and `application` (PIT). Report: `target/pit-reports/`.
 
 ## Spec-driven workflow
 
@@ -77,12 +79,17 @@ Write the test before the production code for each task.
 | Web adapter | controllers in isolation | `@WebMvcTest`, MockMvc |
 | Persistence adapter | repositories against a real database | `@DataJpaTest`, Testcontainers (PostgreSQL) |
 | Acceptance | full application over HTTP | Cucumber, `@SpringBootTest`, Testcontainers |
+| Property-based | invariants of `domain` rules | jqwik |
 | Architecture | hexagonal rules | ArchUnit |
+| Mutation | quality of unit tests on `domain` and `application` | PIT |
 
 - Never use H2 or any in-memory substitute for the database.
 - Spring Boot 4 test APIs: use `@MockitoBean` (not `@MockBean`) and
   `RestTestClient` (not `TestRestTemplate`). Testcontainers 2.x modules are
   named `testcontainers-<module>`.
+- Every domain rule that constrains input values (lengths, ranges, formats,
+  invariants) has at least one jqwik property test in addition to example-based tests.
+- Every test asserts observable behavior. A test without assertions is not a test.
 - Unit test method names describe behavior: `shouldXxxWhenYyy`.
 
 ### Acceptance tests (Cucumber)
@@ -104,6 +111,8 @@ Write the test before the production code for each task.
 - Do not add, remove or upgrade dependencies unless the approved `design.md`
   of the active change requires it.
 - Do not change the Java or Spring Boot versions.
+- Do not change the JaCoCo or PIT configuration: no lower thresholds, no new
+  exclusions, no narrower targets.
 - Do not modify `AGENTS.md` or `openspec/config.yaml`.
 - Do not modify the test infrastructure: `TestcontainersConfiguration`,
   `architecture/HexagonalArchitectureTest`, `acceptance/CucumberAcceptanceTest`
