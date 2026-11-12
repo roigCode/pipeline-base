@@ -1,32 +1,32 @@
 schema: spec-driven
-
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
-
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
-
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+ 
+context: |
+  Write all artifacts in English.
+  This repository validates a spec-driven development pipeline. Treat it as a production system.
+  Code-level conventions (stack, architecture, testing, git) are defined in AGENTS.md.
+  Follow them; do not restate or override them in artifacts.
+  Each change starts from a request file in requests/<id>-<slug>.md.
+  Every requirement must trace back to that request. Do not add behavior the request does not ask for.
+  If the request is ambiguous or incomplete, list open questions instead of resolving them by assumption.
+ 
+rules:
+  proposal:
+    - Reference the source request file by path.
+    - Include an "Out of scope" section.
+    - Include an "Open questions" section. Write "None" if there are none.
+  specs:
+    - Use SHALL or MUST for normative requirements.
+    - Every requirement has at least one scenario.
+    - Cover validation and failure scenarios, not only the happy path.
+    - Describe observable behavior (inputs, outputs, HTTP status codes), not implementation.
+    - For each capability, also write src/test/resources/features/<capability>/<capability>.feature
+      with one Gherkin scenario per spec scenario, using the same scenario title.
+  design:
+    - Name the ports, adapters and classes to create, following the hexagonal structure in AGENTS.md.
+    - Define the HTTP contract - method, path, request body, response body, status codes and ProblemDetail errors.
+    - Define the Flyway migrations needed, with tables, columns, types and constraints.
+    - List any new dependency with its justification. Prefer none.
+  tasks:
+    - Feature files already exist; tasks implement their step definitions and the code that makes them pass.
+    - Each task is small enough for one commit and leaves ./mvnw verify passing.
+    - Each task names the test written before the production code.
