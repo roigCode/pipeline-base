@@ -35,6 +35,8 @@
 		<pitest.version>1.25.8</pitest.version>
 		<pitest.junit5.version>1.2.3</pitest.junit5.version>
 		<jqwik.version>1.10.1</jqwik.version>
+		<spotless.version>3.3.0</spotless.version>
+		<spotbugs-maven-plugin.version>4.9.8.5</spotbugs-maven-plugin.version>
 		<argLine></argLine>
 	</properties>
 
@@ -248,6 +250,75 @@
 				<configuration>
 					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
 				</configuration>
+			</plugin>
+			<!-- Formatting: palantir-java-format. "check" runs in verify;
+			fix with ./mvnw spotless:apply -->
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
+				<configuration>
+					<java>
+					<palantirJavaFormat>
+						<style>PALANTIR</style>
+					</palantirJavaFormat>
+					<removeUnusedImports/>
+					<importOrder/>
+					<trimTrailingWhitespace/>
+					<endWithNewline/>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Static analysis: SpotBugs on production code. "check" runs in verify -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>${spotbugs-maven-plugin.version}</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Medium</threshold>
+					<excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+				</configuration>
+				<executions>
+					<execution>
+					<goals><goal>check</goal></goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Build environment rules. Version managed by the Spring Boot parent -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+					<id>enforce-build-environment</id>
+					<goals><goal>enforce</goal></goals>
+					<configuration>
+						<rules>
+						<requireJavaVersion>
+							<version>[25,26)</version>
+						</requireJavaVersion>
+						<requireMavenVersion>
+							<version>[3.9,)</version>
+						</requireMavenVersion>
+						<banDuplicatePomDependencyVersions/>
+						</rules>
+					</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- SBOM (CycloneDX). Version and configuration managed by the Spring Boot parent.
+     			Generated at package time into META-INF/sbom/application.cdx.json -->
+			<plugin>
+			<groupId>org.cyclonedx</groupId>
+			<artifactId>cyclonedx-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

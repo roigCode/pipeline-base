@@ -18,13 +18,15 @@ system behavior; the code must conform to them.
 
 ## Commands
 
-- Build and run all tests: `./mvnw verify`
+- Format the code: `./mvnw spotless:apply` (run before every commit)
+- Build and run all checks: `./mvnw verify`
 - Run a single test class: `./mvnw test -Dtest=ClassName`
 - First time only: `cp .env.example .env` and adjust the values
 - Start the local database: `docker compose up -d`
 - Run the application locally: `./mvnw spring-boot:run -Dspring-boot.run.profiles=local`
 
 A task is not done until `./mvnw verify` passes. `verify` enforces:
+- Code formatting (Spotless, palantir-java-format) and static analysis (SpotBugs).
 - 80% line and branch coverage per class (JaCoCo). Report: `target/site/jacoco/index.html`.
 - 80% mutation score on `domain` and `application` (PIT). Report: `target/pit-reports/`.
 
@@ -116,8 +118,9 @@ Write the test before the production code for each task.
 - Do not add, remove or upgrade dependencies unless the approved `design.md`
   of the active change requires it.
 - Do not change the Java or Spring Boot versions.
-- Do not change the JaCoCo or PIT configuration: no lower thresholds, no new
-  exclusions, no narrower targets.
+- Do not change the configuration of JaCoCo, PIT, Spotless, SpotBugs or the
+  Maven Enforcer: no lower thresholds, no new exclusions, no narrower targets.
+  Never edit `spotbugs-exclude.xml`. Fix the code instead.
 - Do not modify `AGENTS.md` or `openspec/config.yaml`.
 - Do not modify the test infrastructure: `TestcontainersConfiguration`,
   `architecture/HexagonalArchitectureTest`, `acceptance/CucumberAcceptanceTest`

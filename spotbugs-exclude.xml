@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SpotBugs exclusions. Every exclusion needs a comment explaining why.
+     Only the maintainer of pipeline-base adds exclusions. -->
+<FindBugsFilter>
+</FindBugsFilter>
